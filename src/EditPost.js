@@ -15,18 +15,55 @@ const EditPost = () => {
   useEffect(() => {
     if (post) {
       setEditTitle(post.title);
-      setEditBody(post.body);
+      setEditBody(post.description);
     }
   }, [post, setEditTitle, setEditBody]);
 
+  // const handleEdit = async (id) => {
+  //   const datetime = format(new Date(), "MMMM dd, yyyy pp");
+  //   const updatedPost = {
+  //     id,
+  //     title: editTitle,
+  //     date: new Date().toISOString(),
+  //     description: editBody,
+  //   };
+  //   try {
+  //     const response = await api.put(`/${id}`, updatedPost);
+  //     setPosts(
+  //       posts.map((post) => (post.id === id ? { ...response.data } : post))
+  //     );
+
+  //     setEditTitle("");
+  //     setEditBody("");
+  //     navigate("/");
+  //   } catch (err) {
+  //     console.log(`Error: ${err.message}`);
+  //   }
+  // };
+
   const handleEdit = async (id) => {
-    const datetime = format(new Date(), "MMMM dd, yyyy pp");
-    const updatedPost = { id, title: editTitle, datetime, body: editBody };
+    const updatedPost = {
+      id,
+      title: editTitle,
+      date: new Date().toISOString(),
+      description: editBody,
+    };
+
     try {
-      const response = await api.put(`/posts/${id}`, updatedPost);
-      setPosts(
-        posts.map((post) => (post.id === id ? { ...response.data } : post))
-      );
+      const response = await api.put(`/${id}`, updatedPost);
+      console.log(response.status); // Log status code
+      console.log(response.headers); // Log response headers
+
+      // Handle response
+      if (response.status === 204) {
+        setPosts(
+          posts.map((post) => (post.id === id ? { ...updatedPost } : post))
+        );
+      } else {
+        setPosts(
+          posts.map((post) => (post.id === id ? { ...response.data } : post))
+        );
+      }
 
       setEditTitle("");
       setEditBody("");

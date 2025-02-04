@@ -1,8 +1,4 @@
 import { createContext, useState, useEffect } from "react";
-// import { Routes, Route, useNavigate } from "react-router-dom";
-// import { format } from "date-fns";
-// import api from "../api/posts";
-// import useWindowSize from "../hooks/useWindowSize";
 import useAxiosFetch from "../hooks/useAxiosFetch";
 
 const DataContext = createContext({});
@@ -12,22 +8,36 @@ export const DataProvider = ({ children }) => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  // console.log("aaaaa");
+
   const { data, fetchError, isLoading } = useAxiosFetch(
-    "http://localhost:3500/posts"
+    "https://localhost:7121/api/PostItemApi"
   );
 
   useEffect(() => {
     setPosts(data);
+    setSearchResults(data);
   }, [data]);
+
+  // useEffect(() => {
+  //   const filteredResults = posts.filter(
+  //     (post) =>
+  //       post.body.toLowerCase().includes(search.toLowerCase()) ||
+  //       post.title.toLowerCase().includes(search.toLowerCase())
+  //   );
+
+  //   setSearchResults(filteredResults.reverse());
+  // }, [posts, search]);
 
   useEffect(() => {
     const filteredResults = posts.filter(
       (post) =>
-        post?.body?.toLowerCase().includes(search.toLowerCase()) ||
-        post?.title?.toLowerCase().includes(search.toLowerCase())
+        (post.body && post.body.toLowerCase().includes(search.toLowerCase())) ||
+        (post.title && post.title.toLowerCase().includes(search.toLowerCase()))
     );
-    setSearchResults(filteredResults.reverse()); // Ensure state updates
-  }, [posts, search]); // Add dependencies
+
+    setSearchResults(filteredResults.reverse());
+  }, [posts, search]);
 
   return (
     <DataContext.Provider

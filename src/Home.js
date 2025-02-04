@@ -4,6 +4,9 @@ import DataContext from "./context/DataContext";
 
 const Home = () => {
   const { searchResults, fetchError, isLoading } = useContext(DataContext);
+  // console.log("Search Results:", searchResults);
+  // console.log("Loading State:", isLoading);
+  // console.log("Fetch Error:", fetchError);
 
   return (
     <main className="Home">
